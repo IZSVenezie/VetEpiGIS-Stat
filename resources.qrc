@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/plugins/QVetStat">
+        <file>images/icon02.png</file>
+        <file>images/izsve.png</file>
+        <file>images/worldgrid28.png</file>
+        <file>images/route17.png</file>
+    </qresource>
+</RCC>

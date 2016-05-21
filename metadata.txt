@@ -1,0 +1,37 @@
+# This file contains metadata for your plugin. Since 
+# version 2.0 of QGIS this is the proper way to supply 
+# information about a plugin. The old method of 
+# embedding metadata in __init__.py will 
+# is no longer supported since version 2.0.
+
+# This file should be included when you package your plugin.# Mandatory items:
+
+[general]
+name=QVetStat
+qgisMinimumVersion=2.0
+description=Spatial functions for veterinary epidemiology
+version=0.1
+author=Norbert Solymosi
+email=gis@izsvenezie.it
+about=Spatial statistical methods for veterinary epidemiology
+# End of mandatory metadata
+
+# Recommended items:
+
+# Uncomment the following line and add your changelog:
+# changelog=
+
+# Tags are comma separated with spaces allowed
+tags=
+
+homepage=http://izsvenezie.github.io/QVetStat/
+tracker=https://github.com/IZSVenezie/QVetStat/issues
+repository=https://github.com/IZSVenezie/QVetStat
+category=Plugins
+icon=icon.png
+# experimental flag
+experimental=False
+
+# deprecated flag (applies to the whole plugin, not just a single version)
+deprecated=False
+
