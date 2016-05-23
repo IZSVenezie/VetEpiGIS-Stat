@@ -7,7 +7,7 @@
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
-name=QVetStat
+name=VetEpiGISstat
 qgisMinimumVersion=2.0
 description=Spatial functions for veterinary epidemiology
 version=0.1
@@ -24,9 +24,9 @@ about=Spatial statistical methods for veterinary epidemiology
 # Tags are comma separated with spaces allowed
 tags=
 
-homepage=http://izsvenezie.github.io/QVetStat/
-tracker=https://github.com/IZSVenezie/QVetStat/issues
-repository=https://github.com/IZSVenezie/QVetStat
+homepage=http://izsvenezie.github.io/VetEpiGIS-Stat/
+tracker=https://github.com/IZSVenezie/VetEpiGIS-Stat/issues
+repository=https://github.com/IZSVenezie/VetEpiGIS-Stat
 category=Plugins
 icon=icon.png
 # experimental flag

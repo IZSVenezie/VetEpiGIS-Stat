@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- QVetStat
+ VetEpiGIS-Stat
    A QGIS plugin
    Spatial functions for vet epidemiology
                               -------------------
