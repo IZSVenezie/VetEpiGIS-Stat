@@ -103,7 +103,7 @@ class VetEpiGISstat:
 
         self.frmGT = QAction(
             QIcon(':/plugins/VetEpiGISstat/images/worldgrid28.png'),
-            QCoreApplication.translate('VetEpiGIS-Stat', 'Global tests'),
+            QCoreApplication.translate('VetEpiGIS-Stat', "Global Moran's I, Geary's c"),
             self.iface.mainWindow())
         self.iface.addPluginToMenu('&VetEpiGIS-Stat', self.frmGT)
         self.frmGT.triggered.connect(self.gTests)
@@ -153,7 +153,7 @@ class VetEpiGISstat:
     def gTests(self):
         lyr = self.iface.activeLayer()
         dlg = globalt.Dialog(lyr)
-        dlg.setWindowTitle("Global cluster tests (Moran's I, Geary's c)")
+        dlg.setWindowTitle("Global Moran's I, Geary's c")
         dlg.toolButton.setIcon(QIcon(':/plugins/VetEpiGISstat/images/verify8.png'))
         dlg.toolButton.setToolTip('Run the analysis')
 
