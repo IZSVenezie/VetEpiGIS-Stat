@@ -27,7 +27,7 @@
 
 from PyQt4.QtGui import *
 from PyQt4.QtCore import SIGNAL, Qt, QSettings, QCoreApplication, QFile, QFileInfo, QDate, QVariant, \
-    pyqtSignal, QRegExp, QDateTime, QTranslator
+    pyqtSignal, QRegExp, QDateTime, QTranslator, QFile, QIODevice, QTextStream
 from PyQt4.QtSql import *
 
 from qgis.core import QgsField, QgsSpatialIndex, QgsMessageLog, QgsProject, \
@@ -57,7 +57,6 @@ class Dialog(QDialog, Ui_Dialog):
         for fld in flds:
             if fld.type()!=10:
                 self.comboBox.addItem(fld.name())
-            # self.comboBox.addItem('%s' % fld.type())
 
         self.comboBox_2.addItem('B')
         self.comboBox_2.addItem('C')
@@ -74,6 +73,22 @@ class Dialog(QDialog, Ui_Dialog):
 
 
         self.toolButton.clicked.connect(self.MoranI)
+        self.buttonBox.button(QDialogButtonBox.Save).clicked.connect(self.save)
+
+
+    def save(self):
+        fileName = QFileDialog.getSaveFileName(self, caption='Save As...')
+        try:
+            file = QFile(fileName + '.txt')
+            file.open( QIODevice.WriteOnly | QIODevice.Text )
+            out = QTextStream(file)
+            out << self.plainTextEdit.toPlainText()
+            out.flush()
+            file.close()
+            self.close()
+            return True
+        except IOError:
+            return False
 
 
     def MoranI(self):
