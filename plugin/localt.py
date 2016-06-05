@@ -27,7 +27,7 @@
 
 from PyQt4.QtGui import *
 from PyQt4.QtCore import SIGNAL, Qt, QSettings, QCoreApplication, QFile, QFileInfo, QDate, QVariant, \
-    pyqtSignal, QRegExp, QDateTime, QTranslator
+    pyqtSignal, QRegExp, QDateTime, QTranslator, QModelIndex
 from PyQt4.QtSql import *
 
 from qgis.core import QgsField, QgsSpatialIndex, QgsMessageLog, QgsProject, \
@@ -69,7 +69,6 @@ class Dialog(QDialog, Ui_Dialog):
 
         self.comboBox_4.addItem('randomization')
         self.comboBox_4.addItem('normality')
-
 
         self.toolButton.clicked.connect(self.LISA)
 
@@ -220,12 +219,32 @@ class Dialog(QDialog, Ui_Dialog):
         xwxlm = polyfit(z, lz, 1, full = True)
         # xwxlm = lm(wx ~ x)
 
-        self.plainTextEdit.insertPlainText('Ii: %s\n' % res1)
-        self.plainTextEdit.insertPlainText('E.Ii: %s\n' % res2)
-        self.plainTextEdit.insertPlainText('Var.Ii: %s\n' % res3)
-        self.plainTextEdit.insertPlainText('Z.Ii: %s\n' % res4)
-        self.plainTextEdit.insertPlainText('p-value: %s\n' % pv)
+        # self.plainTextEdit.insertPlainText('Ii: %s\n' % res1)
+        # self.plainTextEdit.insertPlainText('E.Ii: %s\n' % res2)
+        # self.plainTextEdit.insertPlainText('Var.Ii: %s\n' % res3)
+        # self.plainTextEdit.insertPlainText('Z.Ii: %s\n' % res4)
+        # self.plainTextEdit.insertPlainText('p-value: %s\n' % pv)
         # self.plainTextEdit.insertPlainText('lm: %s\n' % xwxlm)
+
+        self.model = QStandardItemModel(len(res1), 5)
+        self.model.setHeaderData(0, Qt.Horizontal, 'Li')
+        self.model.setHeaderData(1, Qt.Horizontal, 'E.Li')
+        self.model.setHeaderData(2, Qt.Horizontal, 'Var.Li')
+        self.model.setHeaderData(3, Qt.Horizontal, 'Z.Li')
+        self.model.setHeaderData(4, Qt.Horizontal, 'p-value')
+
+        for i in xrange(len(res1)):
+            self.model.setData(self.model.index(i, 0, QModelIndex()), '%s' % res1[i])
+            self.model.setData(self.model.index(i, 1, QModelIndex()), '%s' % res2[i])
+            self.model.setData(self.model.index(i, 2, QModelIndex()), '%s' % res3[i])
+            self.model.setData(self.model.index(i, 3, QModelIndex()), '%s' % res4[i])
+            self.model.setData(self.model.index(i, 4, QModelIndex()), '%s' % pv[i])
+
+        self.tableView.setModel(self.model)
+        self.tableView.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.selectionModel = QItemSelectionModel(self.model)
+        self.tableView.setSelectionModel(self.selectionModel)
+        self.tableView.horizontalHeader().setStretchLastSection(True)
 
 
         QApplication.restoreOverrideCursor()

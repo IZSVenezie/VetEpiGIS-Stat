@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'xabout_dialog_base.ui'
 #
-# Created: Sun Jun  5 16:55:18 2016
+# Created: Sun Jun  5 18:44:01 2016
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -37,9 +37,9 @@ class Ui_Dialog(object):
         self.label.setScaledContents(True)
         self.label.setObjectName(_fromUtf8("label"))
         self.gridLayout.addWidget(self.label, 0, 2, 1, 1)
-        self.plainTextEdit = QtGui.QPlainTextEdit(Dialog)
-        self.plainTextEdit.setObjectName(_fromUtf8("plainTextEdit"))
-        self.gridLayout.addWidget(self.plainTextEdit, 1, 0, 1, 3)
+        self.textEdit = QtGui.QTextEdit(Dialog)
+        self.textEdit.setObjectName(_fromUtf8("textEdit"))
+        self.gridLayout.addWidget(self.textEdit, 1, 0, 1, 3)
         spacerItem1 = QtGui.QSpacerItem(180, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.gridLayout.addItem(spacerItem1, 2, 0, 1, 1)
         self.buttonBox = QtGui.QDialogButtonBox(Dialog)

@@ -110,7 +110,7 @@ class VetEpiGISstat:
 
         self.frmLT = QAction(
             QIcon(':/plugins/VetEpiGISstat/images/route17.png'),
-            QCoreApplication.translate('VetEpiGIS-Stat', 'Local tests'),
+            QCoreApplication.translate('VetEpiGIS-Stat', "Local Moran's I (LISA)"),
             self.iface.mainWindow())
         self.iface.addPluginToMenu('&VetEpiGIS-Stat', self.frmLT)
         self.frmLT.triggered.connect(self.lTests)
@@ -143,7 +143,7 @@ class VetEpiGISstat:
     def lTests(self):
         lyr = self.iface.activeLayer()
         dlg = localt.Dialog(lyr)
-        dlg.setWindowTitle('Local cluster tests (LISA)')
+        dlg.setWindowTitle("Local Moran's I (LISA)")
         dlg.toolButton.setIcon(QIcon(':/plugins/VetEpiGISstat/images/verify8.png'))
         dlg.toolButton.setToolTip('Run the analysis')
 
@@ -170,7 +170,7 @@ class VetEpiGISstat:
         dlg.textEdit.append('VetEpiGIS-Stat ' + self.vers + '\n')
         dlg.textEdit.setFontWeight(ow)
         dlg.textEdit.append(
-            'VetEpiGIS-Stat is a free QGIS plugin helping veterinarians in the management of spatial data related to animal disease.\n')
+            'VetEpiGIS-Stat is a free QGIS plugin helping to perform some widely used spatial statistical methods.\nThe functions are based on the spdep R package: https://cran.r-project.org/web/packages/spdep\n')
         dlg.textEdit.setFontWeight(QFont.Bold)
         dlg.textEdit.append('Developers:')
         dlg.textEdit.setFontWeight(ow)
