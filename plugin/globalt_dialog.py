@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'globalt_dialog_base.ui'
 #
-# Created: Mon Feb  1 15:11:24 2016
-#      by: PyQt4 UI code generator 4.9.1
+# Created: Sun Jun  5 16:55:18 2016
+#      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,16 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    _fromUtf8 = lambda s: s
+    def _fromUtf8(s):
+        return s
+
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -28,7 +37,7 @@ class Ui_Dialog(object):
         self.comboBox = QtGui.QComboBox(self.splitter)
         self.comboBox.setMinimumSize(QtCore.QSize(251, 0))
         self.comboBox.setObjectName(_fromUtf8("comboBox"))
-        self.gridLayout_3.addWidget(self.splitter, 0, 0, 1, 3)
+        self.gridLayout_3.addWidget(self.splitter, 0, 0, 1, 4)
         self.gridLayout = QtGui.QGridLayout()
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.label_2 = QtGui.QLabel(Dialog)
@@ -43,7 +52,7 @@ class Ui_Dialog(object):
         self.gridLayout_3.addWidget(self.label_4, 1, 1, 1, 1)
         self.comboBox_4 = QtGui.QComboBox(Dialog)
         self.comboBox_4.setObjectName(_fromUtf8("comboBox_4"))
-        self.gridLayout_3.addWidget(self.comboBox_4, 1, 2, 1, 1)
+        self.gridLayout_3.addWidget(self.comboBox_4, 1, 2, 1, 2)
         self.gridLayout_2 = QtGui.QGridLayout()
         self.gridLayout_2.setObjectName(_fromUtf8("gridLayout_2"))
         self.label_3 = QtGui.QLabel(Dialog)
@@ -53,17 +62,19 @@ class Ui_Dialog(object):
         self.comboBox_3.setObjectName(_fromUtf8("comboBox_3"))
         self.gridLayout_2.addWidget(self.comboBox_3, 0, 1, 1, 1)
         self.gridLayout_3.addLayout(self.gridLayout_2, 2, 0, 1, 1)
+        spacerItem = QtGui.QSpacerItem(254, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_3.addItem(spacerItem, 2, 1, 1, 2)
         self.toolButton = QtGui.QToolButton(Dialog)
         self.toolButton.setObjectName(_fromUtf8("toolButton"))
-        self.gridLayout_3.addWidget(self.toolButton, 3, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.toolButton, 2, 3, 1, 1)
         self.plainTextEdit = QtGui.QPlainTextEdit(Dialog)
         self.plainTextEdit.setObjectName(_fromUtf8("plainTextEdit"))
-        self.gridLayout_3.addWidget(self.plainTextEdit, 4, 0, 1, 3)
+        self.gridLayout_3.addWidget(self.plainTextEdit, 3, 0, 1, 4)
         self.buttonBox = QtGui.QDialogButtonBox(Dialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
-        self.gridLayout_3.addWidget(self.buttonBox, 5, 1, 1, 2)
+        self.gridLayout_3.addWidget(self.buttonBox, 4, 1, 1, 3)
 
         self.retranslateUi(Dialog)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), Dialog.accept)
@@ -71,10 +82,10 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Dialog", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("Dialog", "Data field:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setText(QtGui.QApplication.translate("Dialog", "Weighting scheme:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_4.setText(QtGui.QApplication.translate("Dialog", "Variance assumption:", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_3.setText(QtGui.QApplication.translate("Dialog", "Alternative hypothesis:", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolButton.setText(QtGui.QApplication.translate("Dialog", "...", None, QtGui.QApplication.UnicodeUTF8))
+        Dialog.setWindowTitle(_translate("Dialog", "Dialog", None))
+        self.label.setText(_translate("Dialog", "Data field:", None))
+        self.label_2.setText(_translate("Dialog", "Weighting scheme:", None))
+        self.label_4.setText(_translate("Dialog", "Variance assumption:", None))
+        self.label_3.setText(_translate("Dialog", "Alternative hypothesis:", None))
+        self.toolButton.setText(_translate("Dialog", "...", None))
 

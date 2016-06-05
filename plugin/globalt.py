@@ -247,11 +247,11 @@ class Dialog(QDialog, Ui_Dialog):
         else:
             PrI = 2.0*(1.0-self.pnorm(abs(ZI)))
 
-        self.plainTextEdit.insertPlainText('I: %s\n' % I)
-        self.plainTextEdit.insertPlainText('EI: %s\n' % EI)
-        self.plainTextEdit.insertPlainText('VI: %s\n' % VI)
-        self.plainTextEdit.insertPlainText('ZI: %s\n' % ZI)
-        self.plainTextEdit.insertPlainText('PrI: %s\n' % PrI)
+        self.plainTextEdit.insertPlainText("Moran's I: %s\n" % I)
+        self.plainTextEdit.insertPlainText("Expectation: %s\n" % EI)
+        self.plainTextEdit.insertPlainText("Variance: %s\n" % VI)
+        self.plainTextEdit.insertPlainText("Moran's I standard deviate: %s\n" % ZI)
+        self.plainTextEdit.insertPlainText("p-value: %s\n" % PrI)
 
 
         ans = empty([n])
@@ -291,11 +291,11 @@ class Dialog(QDialog, Ui_Dialog):
             PrI = 2.0*(1.0-self.pnorm(abs(ZC)))
 
         self.plainTextEdit.insertPlainText('\n\n')
-        self.plainTextEdit.insertPlainText('C: %s\n' % C)
-        self.plainTextEdit.insertPlainText('EC: %s\n' % EC)
-        self.plainTextEdit.insertPlainText('VC: %s\n' % VC)
-        self.plainTextEdit.insertPlainText('ZC: %s\n' % ZC)
-        self.plainTextEdit.insertPlainText('PrI: %s\n' % PrI)
+        self.plainTextEdit.insertPlainText("Geary's c: %s\n" % C)
+        self.plainTextEdit.insertPlainText("Expectation: %s\n" % EC)
+        self.plainTextEdit.insertPlainText("Variance: %s\n" % VC)
+        self.plainTextEdit.insertPlainText("Geary's c standard deviate: %s\n" % ZC)
+        self.plainTextEdit.insertPlainText("p-value: %s\n" % PrI)
 
 
         QApplication.restoreOverrideCursor()
