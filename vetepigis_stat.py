@@ -153,7 +153,7 @@ class VetEpiGISstat:
     def gTests(self):
         lyr = self.iface.activeLayer()
         dlg = globalt.Dialog(lyr)
-        dlg.setWindowTitle("Global cluster tests (Moran's I, Geary's c")
+        dlg.setWindowTitle("Global cluster tests (Moran's I, Geary's c)")
         dlg.toolButton.setIcon(QIcon(':/plugins/VetEpiGISstat/images/verify8.png'))
         dlg.toolButton.setToolTip('Run the analysis')
 
