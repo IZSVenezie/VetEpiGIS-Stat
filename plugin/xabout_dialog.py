@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'xabout_dialog_base.ui'
 #
-# Created: Sun Jun  5 19:09:17 2016
+# Created: Sun Jun  5 19:11:29 2016
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,27 +26,24 @@ except AttributeError:
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName(_fromUtf8("Dialog"))
-        Dialog.resize(292, 415)
+        Dialog.resize(485, 415)
         self.gridLayout = QtGui.QGridLayout(Dialog)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
-        spacerItem = QtGui.QSpacerItem(256, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem, 0, 0, 1, 2)
         self.label = QtGui.QLabel(Dialog)
-        self.label.setMaximumSize(QtCore.QSize(161, 111))
         self.label.setText(_fromUtf8(""))
         self.label.setScaledContents(True)
         self.label.setObjectName(_fromUtf8("label"))
-        self.gridLayout.addWidget(self.label, 0, 2, 1, 1)
+        self.gridLayout.addWidget(self.label, 0, 0, 1, 2)
         self.textEdit = QtGui.QTextEdit(Dialog)
         self.textEdit.setObjectName(_fromUtf8("textEdit"))
-        self.gridLayout.addWidget(self.textEdit, 1, 0, 1, 3)
-        spacerItem1 = QtGui.QSpacerItem(180, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem1, 2, 0, 1, 1)
+        self.gridLayout.addWidget(self.textEdit, 1, 0, 1, 2)
+        spacerItem = QtGui.QSpacerItem(180, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem, 2, 0, 1, 1)
         self.buttonBox = QtGui.QDialogButtonBox(Dialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
-        self.gridLayout.addWidget(self.buttonBox, 2, 1, 1, 2)
+        self.gridLayout.addWidget(self.buttonBox, 2, 1, 1, 1)
 
         self.retranslateUi(Dialog)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), Dialog.accept)
