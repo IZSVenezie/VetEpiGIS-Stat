@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'xabout_dialog_base.ui'
 #
-# Created: Sun Jun  5 19:11:29 2016
+# Created: Mon Jun  6 07:16:05 2016
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!

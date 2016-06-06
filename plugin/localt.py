@@ -72,6 +72,28 @@ class Dialog(QDialog, Ui_Dialog):
         self.comboBox_4.addItem('normality')
 
         self.toolButton.clicked.connect(self.LISA)
+        self.buttonBox.button(QDialogButtonBox.Save).clicked.connect(self.save)
+
+
+    def save(self):
+        QApplication.setOverrideCursor(Qt.WaitCursor)
+
+        prv = self.lyr.dataProvider()
+        attrs = prv.fields().toList()
+        self.lyr.startEditing()
+
+        fls = ['Li', 'E_Li', 'Var_Li', 'Z_Li', 'p']
+        nattrs = []
+        for fl in fls:
+            if self.lyr.fieldNameIndex(fl) == -1:
+                nattrs.append(QgsField(fl, 6))
+        if len(nattrs)>0:
+            self.lyr.dataProvider().addAttributes(nattrs)
+            self.lyr.updateFields()
+
+        self.lyr.commitChanges()
+
+        QApplication.restoreOverrideCursor()
 
 
     def LISA(self):

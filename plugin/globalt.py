@@ -57,6 +57,7 @@ class Dialog(QDialog, Ui_Dialog):
         for fld in flds:
             if fld.type()!=10:
                 self.comboBox.addItem(fld.name())
+                # self.comboBox.addItem('%s' % fld.type())
 
         self.comboBox_2.addItem('B')
         self.comboBox_2.addItem('C')
