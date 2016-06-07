@@ -1,6 +1,6 @@
 {
   "name": "VetEpiGIS-Stat",
-  "tagline": "a QGIS plugin to make easy spatial statistics",
+  "tagline": "a QGIS plugin for spatial veterinary epidemiology",
   "body": "VetEpiGIS-Stat is a member of VetEpiGIS QGIS plugin family. The goal of the development to collect spatial statistical methods are used in veterinary epidemiology into a plugin and create an easy to use interface for their application.",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
