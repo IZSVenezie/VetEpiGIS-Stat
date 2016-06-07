@@ -82,7 +82,7 @@ class Dialog(QDialog, Ui_Dialog):
         attrs = prv.fields().toList()
         self.lyr.startEditing()
 
-        fls = ['Li', 'E_Li', 'Var_Li', 'Z_Li', 'p']
+        fls = ['Li', 'E_Li', 'Var_Li', 'Z_Li', 'p_value']
         nattrs = []
         for fl in fls:
             if self.lyr.fieldNameIndex(fl) == -1:
@@ -90,6 +90,22 @@ class Dialog(QDialog, Ui_Dialog):
         if len(nattrs)>0:
             self.lyr.dataProvider().addAttributes(nattrs)
             self.lyr.updateFields()
+
+        feats = prv.getFeatures()
+        feat = QgsFeature()
+        i = 0
+        while feats.nextFeature(feat):
+            self.lyr.changeAttributeValue(feat.id(), feat.fieldNameIndex('Li'),
+                str(self.model.itemData(self.model.index(i, 0))[0]))
+            self.lyr.changeAttributeValue(feat.id(), feat.fieldNameIndex('E_Li'),
+                str(self.model.itemData(self.model.index(i, 1))[0]))
+            self.lyr.changeAttributeValue(feat.id(), feat.fieldNameIndex('Var_Li'),
+                str(self.model.itemData(self.model.index(i, 2))[0]))
+            self.lyr.changeAttributeValue(feat.id(), feat.fieldNameIndex('Z_Li'),
+                str(self.model.itemData(self.model.index(i, 3))[0]))
+            self.lyr.changeAttributeValue(feat.id(), feat.fieldNameIndex('p_value'),
+                str(self.model.itemData(self.model.index(i, 4))[0]))
+            i += 1
 
         self.lyr.commitChanges()
 
