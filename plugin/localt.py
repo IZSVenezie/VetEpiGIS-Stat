@@ -282,7 +282,7 @@ class Dialog(QDialog, Ui_Dialog):
         # http://stackoverflow.com/questions/27757732/find-uncertainty-from-polyfit
         # http://www.mathworks.com/help/stats/coefficient-standard-errors-and-confidence-intervals.html?requestedDomain=www.mathworks.com
         fit, cov = polyfit(z, lz, 1, cov=True)
-        se = sqrt(diag(cov))
+        # se = sqrt(diag(cov))
         for i in xrange(len(z)):
             zb = delete(z,i)
             lzb = delete(lz,i)
@@ -298,11 +298,7 @@ class Dialog(QDialog, Ui_Dialog):
         p = 2.0
         o = 1.0-leverage
         es = resids/(sigma*sqrt(o))
-        covr = 1.0/(o * (((n - p - 1.0) + es**2)/(n - p))**p)
-
-
-
-
+        covratio = 1.0/(o * (((n - p - 1.0) + es**2)/(n - p))**p)
 
         # https://people.duke.edu/~ccc14/sta-663/ResamplingAndMonteCarloSimulations.html
 
@@ -316,6 +312,13 @@ class Dialog(QDialog, Ui_Dialog):
         # self.plainTextEdit.insertPlainText('Z.Ii: %s\n' % res4)
         # self.plainTextEdit.insertPlainText('p-value: %s\n' % pv)
         # self.plainTextEdit.insertPlainText('lm: %s\n' % xwxlm)
+
+#   absmat[, 1L:k] > 1,
+#   absmat[, k + 1] > 3 * sqrt(k/(n - k)),        #dffit
+#   abs(1 - infmat[, k + 2]) > (3 * k)/(n - k),   #cov.r
+#   pf(infmat[, k + 3], k, n - k) > 0.5,          #cook.d
+#   infmat[, k + 4] > (3 * k)/n                   #hat
+# )
 
         self.model = QStandardItemModel(len(res1), 5)
         self.model.setHeaderData(0, Qt.Horizontal, 'Li')
