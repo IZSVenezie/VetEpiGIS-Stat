@@ -255,8 +255,60 @@ class Dialog(QDialog, Ui_Dialog):
                 pv.append(2.0*(1-self.pnorm(e)))
 
         # p-value adjusment!!!
-        xwxlm = polyfit(z, lz, 1, full = True)
+        # xwxlm = polyfit(z, lz, 1, full = True)
         # xwxlm = lm(wx ~ x)
+
+        # sum((polyval(polyfit(z, lz, 1), z) - lz)**2)
+        # http: // www.real - statistics.com / multiple - regression / outliers - and -influencers /
+        fitted = polyval(polyfit(z, lz, 1), z)
+        resids = lz-fitted
+        avgz = mean(z)
+        n = len(z)
+        k = 1
+        SSz = sum((z-avgz)**2)
+        SSr = sum((resids-mean(resids))**2)
+        dfr = n-k-1.0
+        MSr = SSr/dfr
+        leverage = 1.0/n+((z-avgz)**2)/SSz # hat values
+        modMSE = (MSr-resids**2/((1.0-leverage)*dfr))*dfr/(dfr-1.0)
+        rstudent = resids/sqrt(modMSE*(1.0-leverage))
+        CookD = (resids**2/MSr)*(leverage/(1.0-leverage)**2)/(k+1.0)
+        DFFITS = rstudent*sqrt(leverage/(1.0-leverage))
+
+        dfbeta = []
+        dfbetaz = []
+        sigma = [] #residual standard error
+
+        # http://stackoverflow.com/questions/27757732/find-uncertainty-from-polyfit
+        # http://www.mathworks.com/help/stats/coefficient-standard-errors-and-confidence-intervals.html?requestedDomain=www.mathworks.com
+        fit, cov = polyfit(z, lz, 1, cov=True)
+        se = sqrt(diag(cov))
+        for i in xrange(len(z)):
+            zb = delete(z,i)
+            lzb = delete(lz,i)
+            fitb, covb = polyfit(zb, lzb, 1, cov=True)
+            seb = sqrt(diag(covb))
+            re = (fit-fitb)/seb
+            dfbeta.append(re[1])
+            dfbetaz.append(re[0])
+            fittedb = polyval(polyfit(zb, lzb, 1), zb)
+            residsb = lzb - fittedb
+            sigma.append(sqrt(sum(residsb**2)/(n-k-1)))
+
+        p = 2.0
+        o = 1.0-leverage
+        es = resids/(sigma*sqrt(o))
+        covr = 1.0/(o * (((n - p - 1.0) + es**2)/(n - p))**p)
+
+
+
+
+
+        # https://people.duke.edu/~ccc14/sta-663/ResamplingAndMonteCarloSimulations.html
+
+
+        self.plainTextEdit.insertPlainText('lz: %s\n' % lz)
+        self.plainTextEdit.insertPlainText('z: %s\n' % z)
 
         # self.plainTextEdit.insertPlainText('Ii: %s\n' % res1)
         # self.plainTextEdit.insertPlainText('E.Ii: %s\n' % res2)
