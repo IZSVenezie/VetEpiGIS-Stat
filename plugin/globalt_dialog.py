@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'globalt_dialog_base.ui'
 #
-# Created: Thu Jun  9 06:36:31 2016
+# Created: Fri Jun 10 06:40:05 2016
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!

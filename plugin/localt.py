@@ -256,7 +256,7 @@ class Dialog(QDialog, Ui_Dialog):
 
         # p-value adjusment!!!
         # xwxlm = polyfit(z, lz, 1, full = True)
-        # xwxlm = lm(wx ~ x)
+        # xwxlm = lm(lz ~ z)
 
         # sum((polyval(polyfit(z, lz, 1), z) - lz)**2)
         # http: // www.real - statistics.com / multiple - regression / outliers - and -influencers /
@@ -273,7 +273,7 @@ class Dialog(QDialog, Ui_Dialog):
         modMSE = (MSr-resids**2/((1.0-leverage)*dfr))*dfr/(dfr-1.0)
         rstudent = resids/sqrt(modMSE*(1.0-leverage))
         CookD = (resids**2/MSr)*(leverage/(1.0-leverage)**2)/(k+1.0)
-        DFFITS = rstudent*sqrt(leverage/(1.0-leverage))
+        dffit = rstudent*sqrt(leverage/(1.0-leverage))
 
         dfbeta = []
         dfbetaz = []
@@ -313,6 +313,17 @@ class Dialog(QDialog, Ui_Dialog):
         # self.plainTextEdit.insertPlainText('p-value: %s\n' % pv)
         # self.plainTextEdit.insertPlainText('lm: %s\n' % xwxlm)
 
+        dfbetabin = (abs(dfbeta) > 1) + 0
+        dfbetazbin = (abs(dfbetaz) > 1) + 0
+        dffitbin = (abs(dffit) > (3*sqrt(k/(n-k)))) + 0
+        covratiobin = (abs(1.0 - covratio)) + 0
+        CookDbin = (CookDbin) + 0
+        hatbin = (hat > (3.0 * k)/n) + 0
+
+        infl = dfbetabin + dfbetazbin + dffitbin + covratiobin + CookDbin + hatbin
+        inflbin = infl > 0
+
+
 #   absmat[, 1L:k] > 1,
 #   absmat[, k + 1] > 3 * sqrt(k/(n - k)),        #dffit
 #   abs(1 - infmat[, k + 2]) > (3 * k)/(n - k),   #cov.r
@@ -320,12 +331,14 @@ class Dialog(QDialog, Ui_Dialog):
 #   infmat[, k + 4] > (3 * k)/n                   #hat
 # )
 
-        self.model = QStandardItemModel(len(res1), 5)
+        self.model = QStandardItemModel(len(res1), 7)
         self.model.setHeaderData(0, Qt.Horizontal, 'Li')
         self.model.setHeaderData(1, Qt.Horizontal, 'E.Li')
         self.model.setHeaderData(2, Qt.Horizontal, 'Var.Li')
         self.model.setHeaderData(3, Qt.Horizontal, 'Z.Li')
         self.model.setHeaderData(4, Qt.Horizontal, 'p-value')
+        self.model.setHeaderData(5, Qt.Horizontal, 'neighbours')
+        self.model.setHeaderData(6, Qt.Horizontal, 'influence')
 
         for i in xrange(len(res1)):
             self.model.setData(self.model.index(i, 0, QModelIndex()), '%s' % res1[i])
@@ -333,6 +346,7 @@ class Dialog(QDialog, Ui_Dialog):
             self.model.setData(self.model.index(i, 2, QModelIndex()), '%s' % res3[i])
             self.model.setData(self.model.index(i, 3, QModelIndex()), '%s' % res4[i])
             self.model.setData(self.model.index(i, 4, QModelIndex()), '%s' % pv[i])
+            self.model.setData(self.model.index(i, 6, QModelIndex()), '%s' % inflbin[i])
 
         self.tableView.setModel(self.model)
         self.tableView.setSelectionMode(QAbstractItemView.SingleSelection)
