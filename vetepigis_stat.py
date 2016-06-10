@@ -34,7 +34,6 @@ from qgis.core import QgsField, QgsSpatialIndex, QgsMessageLog, QgsProject, \
 from qgis.gui import QgsMapTool, QgsMapToolEmitPoint, QgsMessageBar, QgsRubberBand
 
 
-
 from plugin import xabout, globalt, localt
 import resources_rc
 
