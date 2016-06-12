@@ -5,7 +5,7 @@ cd plugin/
 pyuic4 xabout_dialog_base.ui -o xabout_dialog.py
 pyuic4 globalt_dialog_base.ui -o globalt_dialog.py
 pyuic4 local_dialog_base.ui -o local_dialog.py
-
+pyuic4 scan_dialog_base.ui -o scan_dialog.py
 
 rm -rf /home/sn/.qgis2/python/plugins/VetEpiGIS-Stat
 cp -avr /home/sn/dev/QGISplugins/VetEpiGIS/stat /home/sn/.qgis2/python/plugins/VetEpiGIS-Stat

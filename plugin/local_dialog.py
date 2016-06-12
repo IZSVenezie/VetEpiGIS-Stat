@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'local_dialog_base.ui'
 #
-# Created: Fri Jun 10 09:41:58 2016
+# Created: Sun Jun 12 18:29:48 2016
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -70,18 +70,15 @@ class Ui_Dialog(object):
         self.toolButton.setObjectName(_fromUtf8("toolButton"))
         self.gridLayout_3.addWidget(self.toolButton, 2, 3, 1, 1)
         self.gridLayout_4.addLayout(self.gridLayout_3, 0, 0, 1, 1)
-        self.plainTextEdit = QtGui.QPlainTextEdit(Dialog)
-        self.plainTextEdit.setObjectName(_fromUtf8("plainTextEdit"))
-        self.gridLayout_4.addWidget(self.plainTextEdit, 1, 0, 1, 1)
         self.tableView = QtGui.QTableView(Dialog)
         self.tableView.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
         self.tableView.setObjectName(_fromUtf8("tableView"))
-        self.gridLayout_4.addWidget(self.tableView, 2, 0, 1, 1)
+        self.gridLayout_4.addWidget(self.tableView, 1, 0, 1, 1)
         self.buttonBox = QtGui.QDialogButtonBox(Dialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Close|QtGui.QDialogButtonBox.Save)
         self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
-        self.gridLayout_4.addWidget(self.buttonBox, 3, 0, 1, 1)
+        self.gridLayout_4.addWidget(self.buttonBox, 2, 0, 1, 1)
 
         self.retranslateUi(Dialog)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), Dialog.accept)

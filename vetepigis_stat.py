@@ -34,7 +34,7 @@ from qgis.core import QgsField, QgsSpatialIndex, QgsMessageLog, QgsProject, \
 from qgis.gui import QgsMapTool, QgsMapToolEmitPoint, QgsMessageBar, QgsRubberBand
 
 
-from plugin import xabout, globalt, localt
+from plugin import xabout, globalt, localt, scan
 import resources_rc
 
 
@@ -66,7 +66,7 @@ class VetEpiGISstat:
             'i18n',
             'VetEpiGISstat_{}.qm'.format(locale))
 
-        self.vers = '0.1'
+        self.vers = '0.12'
         self.prevcur = self.iface.mapCanvas().cursor()
 
         # self.thePoint = QgsPoint(0,0)
@@ -114,6 +114,13 @@ class VetEpiGISstat:
         self.iface.addPluginToMenu('&VetEpiGIS-Stat', self.frmLT)
         self.frmLT.triggered.connect(self.lTests)
 
+        self.frmSC = QAction(
+            QIcon(':/plugins/VetEpiGISstat/images/fingerprint-scan.png'),
+            QCoreApplication.translate('VetEpiGIS-Stat', "Scan statistic"),
+            self.iface.mainWindow())
+        self.iface.addPluginToMenu('&VetEpiGIS-Stat', self.frmSC)
+        self.frmSC.triggered.connect(self.scan)
+
         self.actAbout = QAction(
             QIcon(':/plugins/VetEpiGISstat/images/icon02.png'),
             QCoreApplication.translate('VetEpiGIS-Stat', 'About'),
@@ -130,6 +137,7 @@ class VetEpiGISstat:
 
         self.toolbar.addAction(self.frmGT)
         self.toolbar.addAction(self.frmLT)
+        self.toolbar.addAction(self.frmSC)
 
 
 
@@ -137,6 +145,16 @@ class VetEpiGISstat:
         """Removes the plugin menu item and icon from QGIS GUI."""
         self.iface.removePluginMenu('&VetEpiGIS-Stat', self.actAbout)
         del self.toolbar
+
+
+    def scan(self):
+        # lyr = self.iface.activeLayer()
+        dlg = scan.Dialog()
+        dlg.setWindowTitle("Scan statistic")
+        # dlg.toolButton.setIcon(QIcon(':/plugins/VetEpiGISstat/images/verify8.png'))
+        # dlg.toolButton.setToolTip('Run the analysis')
+
+        dlg.exec_()
 
 
     def lTests(self):
