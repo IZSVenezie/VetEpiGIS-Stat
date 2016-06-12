@@ -87,6 +87,12 @@ class Dialog(QDialog, Ui_Dialog):
         for fl in fls:
             if self.lyr.fieldNameIndex(fl) == -1:
                 nattrs.append(QgsField(fl, 6))
+
+        fls = ['neighbours', 'influence']
+        for fl in fls:
+            if self.lyr.fieldNameIndex(fl) == -1:
+                nattrs.append(QgsField(fl, 10))
+
         if len(nattrs)>0:
             self.lyr.dataProvider().addAttributes(nattrs)
             self.lyr.updateFields()
@@ -105,7 +111,12 @@ class Dialog(QDialog, Ui_Dialog):
                 str(self.model.itemData(self.model.index(i, 3))[0]))
             self.lyr.changeAttributeValue(feat.id(), feat.fieldNameIndex('p_value'),
                 str(self.model.itemData(self.model.index(i, 4))[0]))
+            self.lyr.changeAttributeValue(feat.id(), feat.fieldNameIndex('neighbours'),
+                str(self.model.itemData(self.model.index(i, 5))[0]))
+            self.lyr.changeAttributeValue(feat.id(), feat.fieldNameIndex('influence'),
+                str(self.model.itemData(self.model.index(i, 6))[0]))
             i += 1
+
 
         self.lyr.commitChanges()
 
@@ -275,6 +286,7 @@ class Dialog(QDialog, Ui_Dialog):
         dfbeta = []
         dfbetaz = []
         sigma = [] #residual standard error
+        neighbours = []
 
         fit, cov = polyfit(z, lz, 1, cov=True)
         # se = sqrt(diag(cov))
@@ -289,6 +301,16 @@ class Dialog(QDialog, Ui_Dialog):
             fittedb = polyval(polyfit(zb, lzb, 1), zb)
             residsb = lzb - fittedb
             sigma.append(sqrt(sum(residsb**2)/(n-k-1.0)))
+            neighbour = 'NA'
+            if z[i]>0 and lz[i]>0:
+                neighbour = 'High-high'
+            if z[i]>0 and lz[i]<0:
+                neighbour = 'High-low'
+            if z[i]<0 and lz[i]<0:
+                neighbour = 'Low-low'
+            if z[i]<0 and lz[i]>0:
+                neighbour = 'Low-high'
+            neighbours.append(neighbour)
 
         p = 2.0
         o = 1.0-leverage
@@ -339,6 +361,7 @@ class Dialog(QDialog, Ui_Dialog):
             self.model.setData(self.model.index(i, 2, QModelIndex()), '%s' % res3[i])
             self.model.setData(self.model.index(i, 3, QModelIndex()), '%s' % res4[i])
             self.model.setData(self.model.index(i, 4, QModelIndex()), '%s' % pv[i])
+            self.model.setData(self.model.index(i, 5, QModelIndex()), '%s' % neighbours[i])
             self.model.setData(self.model.index(i, 6, QModelIndex()), '%s' % inflbin[i])
 
         self.tableView.setModel(self.model)
