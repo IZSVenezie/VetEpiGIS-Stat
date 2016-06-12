@@ -255,84 +255,74 @@ class Dialog(QDialog, Ui_Dialog):
                 pv.append(2.0*(1-self.pnorm(e)))
 
         # p-value adjusment!!!
-        # xwxlm = polyfit(z, lz, 1, full = True)
-        # xwxlm = lm(lz ~ z)
 
-        # sum((polyval(polyfit(z, lz, 1), z) - lz)**2)
         # http: // www.real - statistics.com / multiple - regression / outliers - and -influencers /
-fitted = polyval(polyfit(z, lz, 1), z)
-resids = lz-fitted
-avgz = mean(z)
-n = len(z)
-k = 1.0
-SSz = sum((z-avgz)**2)
-SSr = sum((resids-mean(resids))**2)
-dfr = n-k-1.0
-MSr = SSr/dfr
-leverage = 1.0/n+((z-avgz)**2)/SSz # hat values
-modMSE = (MSr-resids**2/((1.0-leverage)*dfr))*dfr/(dfr-1.0)
-rstudent = resids/sqrt(modMSE*(1.0-leverage))
-CookD = (resids**2/MSr)*(leverage/(1.0-leverage)**2)/(k+1.0)
-dffit = rstudent*sqrt(leverage/(1.0-leverage))
+        fitted = polyval(polyfit(z, lz, 1), z)
+        resids = lz-fitted
+        avgz = mean(z)
+        n = len(z)
+        k = 1.0
+        SSz = sum((z-avgz)**2)
+        SSr = sum((resids-mean(resids))**2)
+        dfr = n-k-1.0
+        MSr = SSr/dfr
+        leverage = 1.0/n+((z-avgz)**2)/SSz # hat values
+        modMSE = (MSr-resids**2/((1.0-leverage)*dfr))*dfr/(dfr-1.0)
+        rstudent = resids/sqrt(modMSE*(1.0-leverage))
+        CookD = (resids**2/MSr)*(leverage/(1.0-leverage)**2)/(k+1.0)
+        dffit = rstudent*sqrt(leverage/(1.0-leverage))
 
-dfbeta = []
-dfbetaz = []
-sigma = [] #residual standard error
+        dfbeta = []
+        dfbetaz = []
+        sigma = [] #residual standard error
 
-# http://stackoverflow.com/questions/27757732/find-uncertainty-from-polyfit
-# http://www.mathworks.com/help/stats/coefficient-standard-errors-and-confidence-intervals.html?requestedDomain=www.mathworks.com
-fit, cov = polyfit(z, lz, 1, cov=True)
-# se = sqrt(diag(cov))
-for i in xrange(len(z)):
-    zb = delete(z,i)
-    lzb = delete(lz,i)
-    fitb, covb = polyfit(zb, lzb, 1, cov=True)
-    seb = sqrt(diag(covb))
-    re = (fit-fitb)/seb
-    dfbeta.append(re[1])
-    dfbetaz.append(re[0])
-    fittedb = polyval(polyfit(zb, lzb, 1), zb)
-    residsb = lzb - fittedb
-    sigma.append(sqrt(sum(residsb**2)/(n-k-1.0)))
+        fit, cov = polyfit(z, lz, 1, cov=True)
+        # se = sqrt(diag(cov))
+        for i in xrange(len(z)):
+            zb = delete(z,i)
+            lzb = delete(lz,i)
+            fitb, covb = polyfit(zb, lzb, 1, cov=True)
+            seb = sqrt(diag(covb))
+            re = (fit-fitb)/seb
+            dfbeta.append(re[1])
+            dfbetaz.append(re[0])
+            fittedb = polyval(polyfit(zb, lzb, 1), zb)
+            residsb = lzb - fittedb
+            sigma.append(sqrt(sum(residsb**2)/(n-k-1.0)))
 
-p = 2.0
-o = 1.0-leverage
-es = resids/(sigma*sqrt(o))
-covratio = 1.0/(o * (((n - p - 1.0) + es**2)/(n - p))**p)
+        p = 2.0
+        o = 1.0-leverage
+        es = resids/(sigma*sqrt(o))
+        covratio = 1.0/(o * (((n - p - 1.0) + es**2)/(n - p))**p)
 
-n = sum(leverage>0.0)
-k = 2.0
-dfbetabin = (abs(array(dfbeta)) > 1) + 0
-dfbetazbin = (abs(array(dfbetaz)) > 1) + 0
-dffitbin = (abs(array(dffit)) > (3 * sqrt(k / (n - k)))) + 0
-covratiobin = (abs(1.0 - covratio) > ((3.0 * k)/(n - k))) + 0
-# CookDbin = (CookDbin) + 0
-hatbin = (leverage > (3.0 * k) / n) + 0
+        n = sum(leverage>0.0)
+        k = 2.0
+        rf = random.f(k, n - k, 1000000)
+        xv, ps = self.ecdf(rf)
+        xv = xv.tolist()
 
-infl = dfbetabin + dfbetazbin + dffitbin + covratiobin + CookDbin + hatbin
-inflbin = infl > 0
+        dfbetabin = (abs(array(dfbeta)) > 1) + 0
+        dfbetazbin = (abs(array(dfbetaz)) > 1) + 0
+        dffitbin = (abs(array(dffit)) > (3 * sqrt(k / (n - k)))) + 0
+        covratiobin = (abs(1.0 - covratio) > ((3.0 * k)/(n - k))) + 0
+        cookD = []
+        for e in CookD:
+            cookD.append(self.pf(xv, ps, e))
 
-        # https://people.duke.edu/~ccc14/sta-663/ResamplingAndMonteCarloSimulations.html
+        CookDbin = (array(cookD) > 0.5) + 0
+        hatbin = (leverage > (3.0 * k) / n) + 0
 
+        infl = dfbetabin + dfbetazbin + dffitbin + covratiobin + CookDbin + hatbin
+        inflbin = infl > 0
 
-        self.plainTextEdit.insertPlainText('lz: %s\n' % lz)
-        self.plainTextEdit.insertPlainText('z: %s\n' % z)
-
+        # self.plainTextEdit.insertPlainText('lz: %s\n' % lz)
+        # self.plainTextEdit.insertPlainText('z: %s\n' % z)
         # self.plainTextEdit.insertPlainText('Ii: %s\n' % res1)
         # self.plainTextEdit.insertPlainText('E.Ii: %s\n' % res2)
         # self.plainTextEdit.insertPlainText('Var.Ii: %s\n' % res3)
         # self.plainTextEdit.insertPlainText('Z.Ii: %s\n' % res4)
         # self.plainTextEdit.insertPlainText('p-value: %s\n' % pv)
         # self.plainTextEdit.insertPlainText('lm: %s\n' % xwxlm)
-
-
-
-#   absmat[, 1L:k] > 1,
-#   absmat[, k + 1] > 3 * sqrt(k/(n - k)),        #dffit
-#   abs(1 - infmat[, k + 2]) > (3 * k)/(n - k),   #cov.r
-#   pf(infmat[, k + 3], k, n - k) > 0.5,          #cook.d
-#   infmat[, k + 4] > (3 * k)/n                   #hat
-# )
 
         self.model = QStandardItemModel(len(res1), 7)
         self.model.setHeaderData(0, Qt.Horizontal, 'Li')
@@ -349,7 +339,7 @@ inflbin = infl > 0
             self.model.setData(self.model.index(i, 2, QModelIndex()), '%s' % res3[i])
             self.model.setData(self.model.index(i, 3, QModelIndex()), '%s' % res4[i])
             self.model.setData(self.model.index(i, 4, QModelIndex()), '%s' % pv[i])
-            # self.model.setData(self.model.index(i, 6, QModelIndex()), '%s' % inflbin[i])
+            self.model.setData(self.model.index(i, 6, QModelIndex()), '%s' % inflbin[i])
 
         self.tableView.setModel(self.model)
         self.tableView.setSelectionMode(QAbstractItemView.SingleSelection)
@@ -359,6 +349,17 @@ inflbin = infl > 0
 
 
         QApplication.restoreOverrideCursor()
+
+
+    def ecdf(self, x):
+        xv = sort(x)
+        ps = arange(1.0, len(xv)+1.0)/float(len(xv))
+        return xv, ps
+
+
+    def pf(self, xv, ps, e):
+        # ps[xv.index(min(xv, key=lambda x:abs(x-e)))]
+        return max(ps[xv <= e])
 
 
     def pnorm(self, z):
