@@ -124,6 +124,9 @@ class Dialog(QDialog, Ui_Dialog):
 
 
     def LISA(self):
+        # ***************************************************************************
+        # The functions are based on the spdep R package: https://cran.r-project.org/web/packages/spdep
+        # ***************************************************************************
         QApplication.setOverrideCursor(Qt.WaitCursor)
         if len(self.nb)==0:
             nb = self.poly2nb()
