@@ -33,7 +33,8 @@ from PyQt4.QtSql import *
 from qgis.core import QgsField, QgsSpatialIndex, QgsMessageLog, QgsProject, \
     QgsCoordinateTransform, QGis, QgsVectorFileWriter, QgsMapLayerRegistry, QgsFeature, \
     QgsGeometry, QgsFeatureRequest, QgsPoint, QgsVectorLayer, QgsCoordinateReferenceSystem, \
-    QgsRectangle, QgsDataSourceURI, QgsDataProvider, QgsVectorDataProvider
+    QgsRectangle, QgsDataSourceURI, QgsDataProvider, QgsVectorDataProvider, QgsDistanceArea, \
+    QgsUnitTypes
 from qgis.gui import QgsMapTool, QgsMapToolEmitPoint, QgsMessageBar, QgsRubberBand
 from numpy import *
 import itertools, math
@@ -76,45 +77,76 @@ class Dialog(QDialog, Ui_Dialog):
         self.buttonBox.button(QDialogButtonBox.Save).clicked.connect(self.save)
         self.comboBox_5.currentIndexChanged.connect(self.neightyper)
 
-        self.comboBox_5.addItem('touch')
-        self.comboBox_5.addItem('within distance')
+        # self.comboBox_5.addItem('touch')
+        # self.comboBox_5.addItem('within distance')
         self.comboBox_6.addItem('km')
         self.comboBox_6.addItem('map unit')
 
 
     def point2nb(self):
         lst = []
-        points = [geom.geometry().asPoint() for geom in self.lyr.getFeatures()]
-        for point1,point2 in itertools.combinations(points, 2):
-            d = QgsGeometry().fromPoint(point1).distance(QgsGeometry().fromPoint(point2))
+        # geoms = [geom.geometry() for geom in self.lyr.getFeatures()
+        # feats = self.lyr.getFeatures()
+        # for f1, f2 in itertools.product(feats, repeat=2):
+        #     if f1!=f2:
+        #         d = f1.geometry().asPoint().distance(f2.geometry().asPoint())
+        #         self.plainTextEdit.insertPlainText("%s %s: %s\n" % (f1.id(), f2.id(), d))
 
-        # index = QgsSpatialIndex()
-        # featsA = self.lyr.getFeatures()
-        # featsB = self.lyr.getFeatures()
-        # for ft in featsA:
-        #     index.insertFeature(ft)
-        #
-        # featB = QgsFeature()
-        # prv = self.lyr.dataProvider()
-        # while featsB.nextFeature(featB):
-        #     geomB = featB.constGeometry()
-        #     idb = featB.id()
-        #     geomA = QgsGeometry(featA.geometry())
-        #
-        #     # idxs = index.intersects(geomB.boundingBox())
-        #     # sor = []
-        #     # for idx in idxs:
-        #     #     rqst = QgsFeatureRequest().setFilterFid(idx)
-        #     #     featA = prv.getFeatures(rqst).next()
-        #     #     ida = featA.id()
-        #     #     geomA = QgsGeometry(featA.geometry())
-        #     #     if idb != ida:
-        #     #         if geomB.touches(geomA) == True:
-        #     #             sor.append(ida)
-        #
-        #     lst.append(sor)
-        #
-        # return lst
+        featA = QgsFeature()
+        featsA = self.lyr.getFeatures()
+        trh = float(self.lineEdit.text())
+
+        if self.comboBox_6.currentText() == 'km':
+            # psrid = self.iface.mapCanvas().mapRenderer().destinationCrs().srsid()
+            prv = self.lyr.dataProvider()
+            psrid = prv.crs().srsid()
+
+            dist = QgsDistanceArea()
+            dist.setEllipsoid('WGS84')
+            dist.setEllipsoidalMode(True)
+
+            # self.plainTextEdit.insertPlainText("%s\n" % psrid)
+
+            if psrid!=3452:
+                trafo = QgsCoordinateTransform(psrid, 3452)
+                while featsA.nextFeature(featA):
+                    featB = QgsFeature()
+                    featsB = self.lyr.getFeatures()
+                    sor = []
+                    while featsB.nextFeature(featB):
+                        if featA.id()!=featB.id():
+                            tav = dist.measureLine(trafo.transform(featA.geometry().asPoint()), trafo.transform(featB.geometry().asPoint()))
+                            # self.plainTextEdit.insertPlainText("%s %s %s\n" % (featA.id(), featB.id(), tav))
+                            if (tav/1000.0) <= trh:
+                                sor.append(featB.id())
+                    lst.append(sor)
+            else:
+                while featsA.nextFeature(featA):
+                    featB = QgsFeature()
+                    featsB = self.lyr.getFeatures()
+                    sor = []
+                    while featsB.nextFeature(featB):
+                        if featA.id()!=featB.id():
+                            tav = dist.measureLine(featA.geometry().asPoint(), featB.geometry().asPoint())
+                            # self.plainTextEdit.insertPlainText("%s %s %s\n" % (featA.id(), featB.id(), tav))
+                            if (tav/1000.0) <= trh:
+                                sor.append(featB.id())
+                    lst.append(sor)
+        else:
+            while featsA.nextFeature(featA):
+                featB = QgsFeature()
+                featsB = self.lyr.getFeatures()
+                sor = []
+                while featsB.nextFeature(featB):
+                    if featA.id() != featB.id():
+                        tav = featA.geometry().asPoint().distance(featB.geometry().asPoint())
+                        # self.plainTextEdit.insertPlainText("%s %s %s\n" % (featA.id(), featB.id(), tav))
+                        if tav <= trh:
+                            sor.append(featB.id())
+                lst.append(sor)
+
+        self.plainTextEdit.insertPlainText("%s\n" % lst)
+        return lst
 
 
     def neightyper(self):
@@ -148,8 +180,8 @@ class Dialog(QDialog, Ui_Dialog):
                 nb = self.poly2nb()
             else:
                 nb = self.point2nb()
-                QApplication.restoreOverrideCursor()
-                return
+                # QApplication.restoreOverrideCursor()
+                # return
             self.nb = nb
         else:
             nb = self.nb
@@ -479,7 +511,7 @@ class Dialog(QDialog, Ui_Dialog):
                         sor.append(ida)
 
             lst.append(sor)
-
+        # self.plainTextEdit.insertPlainText("%s\n" % lst)
         return lst
 
 

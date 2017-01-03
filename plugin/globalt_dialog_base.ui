@@ -47,7 +47,7 @@
    <item row="1" column="4">
     <widget class="QLineEdit" name="lineEdit">
      <property name="inputMethodHints">
-      <set>Qt::ImhDigitsOnly</set>
+      <set>Qt::ImhNone</set>
      </property>
      <property name="inputMask">
       <string/>
@@ -141,6 +141,12 @@
     <widget class="QToolButton" name="toolButton">
      <property name="text">
       <string>...</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>30</width>
+       <height>30</height>
+      </size>
      </property>
     </widget>
    </item>

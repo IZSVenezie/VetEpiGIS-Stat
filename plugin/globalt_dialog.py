@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'globalt_dialog_base.ui'
 #
-# Created: Tue Jan  3 10:39:14 2017
+# Created: Tue Jan  3 19:10:41 2017
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -45,7 +45,7 @@ class Ui_Dialog(object):
         self.comboBox_5.setObjectName(_fromUtf8("comboBox_5"))
         self.gridLayout_3.addWidget(self.comboBox_5, 1, 1, 1, 3)
         self.lineEdit = QtGui.QLineEdit(Dialog)
-        self.lineEdit.setInputMethodHints(QtCore.Qt.ImhDigitsOnly)
+        self.lineEdit.setInputMethodHints(QtCore.Qt.ImhNone)
         self.lineEdit.setInputMask(_fromUtf8(""))
         self.lineEdit.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
@@ -84,6 +84,7 @@ class Ui_Dialog(object):
         spacerItem2 = QtGui.QSpacerItem(254, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.gridLayout_3.addItem(spacerItem2, 3, 4, 1, 2)
         self.toolButton = QtGui.QToolButton(Dialog)
+        self.toolButton.setIconSize(QtCore.QSize(30, 30))
         self.toolButton.setObjectName(_fromUtf8("toolButton"))
         self.gridLayout_3.addWidget(self.toolButton, 3, 6, 1, 1)
         self.plainTextEdit = QtGui.QPlainTextEdit(Dialog)
