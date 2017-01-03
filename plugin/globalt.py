@@ -77,13 +77,48 @@ class Dialog(QDialog, Ui_Dialog):
         self.comboBox_5.currentIndexChanged.connect(self.neightyper)
 
         self.comboBox_5.addItem('touch')
-        self.comboBox_5.addItem('within distance:')
+        self.comboBox_5.addItem('within distance')
         self.comboBox_6.addItem('km')
         self.comboBox_6.addItem('map unit')
 
 
+    def point2nb(self):
+        lst = []
+        points = [geom.geometry().asPoint() for geom in self.lyr.getFeatures()]
+        for point1,point2 in itertools.combinations(points, 2):
+            d = QgsGeometry().fromPoint(point1).distance(QgsGeometry().fromPoint(point2))
+
+        # index = QgsSpatialIndex()
+        # featsA = self.lyr.getFeatures()
+        # featsB = self.lyr.getFeatures()
+        # for ft in featsA:
+        #     index.insertFeature(ft)
+        #
+        # featB = QgsFeature()
+        # prv = self.lyr.dataProvider()
+        # while featsB.nextFeature(featB):
+        #     geomB = featB.constGeometry()
+        #     idb = featB.id()
+        #     geomA = QgsGeometry(featA.geometry())
+        #
+        #     # idxs = index.intersects(geomB.boundingBox())
+        #     # sor = []
+        #     # for idx in idxs:
+        #     #     rqst = QgsFeatureRequest().setFilterFid(idx)
+        #     #     featA = prv.getFeatures(rqst).next()
+        #     #     ida = featA.id()
+        #     #     geomA = QgsGeometry(featA.geometry())
+        #     #     if idb != ida:
+        #     #         if geomB.touches(geomA) == True:
+        #     #             sor.append(ida)
+        #
+        #     lst.append(sor)
+        #
+        # return lst
+
+
     def neightyper(self):
-        if self.comboBox_5.currentText() == 'within distance:':
+        if self.comboBox_5.currentText() == 'within distance':
             self.lineEdit.setVisible(True)
             self.comboBox_6.setVisible(True)
         else:
@@ -109,7 +144,12 @@ class Dialog(QDialog, Ui_Dialog):
     def MoranI(self):
         QApplication.setOverrideCursor(Qt.WaitCursor)
         if len(self.nb)==0:
-            nb = self.poly2nb()
+            if self.comboBox_5.currentText()!='within distance':
+                nb = self.poly2nb()
+            else:
+                nb = self.point2nb()
+                QApplication.restoreOverrideCursor()
+                return
             self.nb = nb
         else:
             nb = self.nb
@@ -409,6 +449,8 @@ class Dialog(QDialog, Ui_Dialog):
 #         self.plainTextEdit.insertPlainText('\n\nMoran I: %s' % I)
 #
 #         QApplication.restoreOverrideCursor()
+
+
 
 
     def poly2nb(self):

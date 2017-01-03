@@ -187,7 +187,7 @@ class VetEpiGISstat:
         dlg.textEdit.append('VetEpiGIS-Stat ' + self.vers + '\n')
         dlg.textEdit.setFontWeight(ow)
         dlg.textEdit.append(
-            'VetEpiGIS-Stat is a free QGIS plugin helping to perform some widely used spatial statistical methods.\nThe functions are based on the spdep R package: https://cran.r-project.org/web/packages/spdep\n')
+            "VetEpiGIS-Stat is a member of VetEpiGIS QGIS plugin family. The goal of the development is to collect spatial statistical methods are used in veterinary epidemiology into a plugin and create an easy to use interface for their application. Implemented methods: global Moran's I, global Geary's c, Local Moran's I.\nThe functions are based on the spdep R package: https://cran.r-project.org/web/packages/spdep\n")
         dlg.textEdit.setFontWeight(QFont.Bold)
         dlg.textEdit.append('Developers:')
         dlg.textEdit.setFontWeight(ow)
