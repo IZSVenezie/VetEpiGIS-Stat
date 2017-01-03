@@ -72,9 +72,23 @@ class Dialog(QDialog, Ui_Dialog):
         self.comboBox_4.addItem('randomization')
         self.comboBox_4.addItem('normality')
 
-
         self.toolButton.clicked.connect(self.MoranI)
         self.buttonBox.button(QDialogButtonBox.Save).clicked.connect(self.save)
+        self.comboBox_5.currentIndexChanged.connect(self.neightyper)
+
+        self.comboBox_5.addItem('touch')
+        self.comboBox_5.addItem('within distance:')
+        self.comboBox_6.addItem('km')
+        self.comboBox_6.addItem('map unit')
+
+
+    def neightyper(self):
+        if self.comboBox_5.currentText() == 'within distance:':
+            self.lineEdit.setVisible(True)
+            self.comboBox_6.setVisible(True)
+        else:
+            self.lineEdit.setVisible(False)
+            self.comboBox_6.setVisible(False)
 
 
     def save(self):
