@@ -204,7 +204,9 @@ class Dialog(QDialog, Ui_Dialog):
         if effn<1:
             return
 
-        vlist = [None]*n
+        # vlist = [None]*n
+        # vlist = [[None]]*n
+        vlist = [[0]] * n
 
         if self.comboBox_2.currentText()=='B':
             for i in xrange(n):
@@ -267,6 +269,10 @@ class Dialog(QDialog, Ui_Dialog):
 
         listw = vlist
 
+        self.plainTextEdit.insertPlainText("listw: %s\n" % listw)
+        # return
+
+        # S0 = sum(sum(filter(None, listw)))
         S0 = sum(sum(listw))
         S1 = 0
         rS = [0]*len(nb)
