@@ -33,10 +33,10 @@ from PyQt4.QtSql import *
 from qgis.core import QgsField, QgsSpatialIndex, QgsMessageLog, QgsProject, \
     QgsCoordinateTransform, QGis, QgsVectorFileWriter, QgsMapLayerRegistry, QgsFeature, \
     QgsGeometry, QgsFeatureRequest, QgsPoint, QgsVectorLayer, QgsCoordinateReferenceSystem, \
-    QgsRectangle, QgsDataSourceURI, QgsDataProvider, QgsVectorDataProvider
+    QgsRectangle, QgsDataSourceURI, QgsDataProvider, QgsVectorDataProvider, QgsDistanceArea
 from qgis.gui import QgsMapTool, QgsMapToolEmitPoint, QgsMessageBar, QgsRubberBand
 from numpy import *
-import itertools, math
+import itertools, math, pickle
 
 from local_dialog import Ui_Dialog
 
@@ -73,6 +73,87 @@ class Dialog(QDialog, Ui_Dialog):
 
         self.toolButton.clicked.connect(self.LISA)
         self.buttonBox.button(QDialogButtonBox.Save).clicked.connect(self.save)
+        self.comboBox_5.currentIndexChanged.connect(self.neightyper)
+
+        # self.comboBox_5.addItem('touch')
+        # self.comboBox_5.addItem('within distance')
+        self.comboBox_6.addItem('km')
+        self.comboBox_6.addItem('map unit')
+
+    def point2nb(self):
+        lst = []
+        # geoms = [geom.geometry() for geom in self.lyr.getFeatures()
+        # feats = self.lyr.getFeatures()
+        # for f1, f2 in itertools.product(feats, repeat=2):
+        #     if f1!=f2:
+        #         d = f1.geometry().asPoint().distance(f2.geometry().asPoint())
+        #         self.plainTextEdit.insertPlainText("%s %s: %s\n" % (f1.id(), f2.id(), d))
+
+        featA = QgsFeature()
+        featsA = self.lyr.getFeatures()
+        trh = float(self.lineEdit.text())
+
+        if self.comboBox_6.currentText() == 'km':
+            # psrid = self.iface.mapCanvas().mapRenderer().destinationCrs().srsid()
+            prv = self.lyr.dataProvider()
+            psrid = prv.crs().srsid()
+
+            dist = QgsDistanceArea()
+            dist.setEllipsoid('WGS84')
+            dist.setEllipsoidalMode(True)
+
+            # self.plainTextEdit.insertPlainText("%s\n" % psrid)
+
+            if psrid != 3452:
+                trafo = QgsCoordinateTransform(psrid, 3452)
+                while featsA.nextFeature(featA):
+                    featB = QgsFeature()
+                    featsB = self.lyr.getFeatures()
+                    sor = []
+                    while featsB.nextFeature(featB):
+                        if featA.id() != featB.id():
+                            tav = dist.measureLine(trafo.transform(featA.geometry().asPoint()),
+                                                   trafo.transform(featB.geometry().asPoint()))
+                            # self.plainTextEdit.insertPlainText("%s %s %s\n" % (featA.id(), featB.id(), tav))
+                            if (tav / 1000.0) <= trh:
+                                sor.append(featB.id())
+                    lst.append(sor)
+            else:
+                while featsA.nextFeature(featA):
+                    featB = QgsFeature()
+                    featsB = self.lyr.getFeatures()
+                    sor = []
+                    while featsB.nextFeature(featB):
+                        if featA.id() != featB.id():
+                            tav = dist.measureLine(featA.geometry().asPoint(), featB.geometry().asPoint())
+                            # self.plainTextEdit.insertPlainText("%s %s %s\n" % (featA.id(), featB.id(), tav))
+                            if (tav / 1000.0) <= trh:
+                                sor.append(featB.id())
+                    lst.append(sor)
+        else:
+            while featsA.nextFeature(featA):
+                featB = QgsFeature()
+                featsB = self.lyr.getFeatures()
+                sor = []
+                while featsB.nextFeature(featB):
+                    if featA.id() != featB.id():
+                        tav = featA.geometry().asPoint().distance(featB.geometry().asPoint())
+                        # self.plainTextEdit.insertPlainText("%s %s %s\n" % (featA.id(), featB.id(), tav))
+                        if tav <= trh:
+                            sor.append(featB.id())
+                lst.append(sor)
+
+        # self.plainTextEdit.insertPlainText("%s\n" % lst)
+        return lst
+
+
+    def neightyper(self):
+        if self.comboBox_5.currentText() == 'within distance':
+            self.lineEdit.setVisible(True)
+            self.comboBox_6.setVisible(True)
+        else:
+            self.lineEdit.setVisible(False)
+            self.comboBox_6.setVisible(False)
 
 
     def save(self):
@@ -123,13 +204,22 @@ class Dialog(QDialog, Ui_Dialog):
         QApplication.restoreOverrideCursor()
 
 
+
+
     def LISA(self):
         # ***************************************************************************
         # The functions are based on the spdep R package: https://cran.r-project.org/web/packages/spdep
         # ***************************************************************************
         QApplication.setOverrideCursor(Qt.WaitCursor)
-        if len(self.nb)==0:
-            nb = self.poly2nb()
+        if len(self.nb) == 0:
+            if self.comboBox_5.currentText() != 'within distance':
+                nb = self.poly2nb()
+            else:
+                if self.lineEdit.text() == '':
+                    QApplication.restoreOverrideCursor()
+                    QMessageBox.information(None, 'Missing data', 'Within distance must be set up!')
+                    return
+                nb = self.point2nb()
             self.nb = nb
         else:
             nb = self.nb
@@ -156,7 +246,9 @@ class Dialog(QDialog, Ui_Dialog):
         if effn<1:
             return
 
-        vlist = [None]*n
+        # vlist = [None]*n
+        # vlist = [[None]]*n
+        vlist = [[0]] * n
 
         if self.comboBox_2.currentText()=='B':
             for i in xrange(n):
@@ -331,7 +423,17 @@ class Dialog(QDialog, Ui_Dialog):
         dffitbin = (abs(array(dffit)) > (3 * sqrt(k / (n - k)))) + 0
         covratiobin = (abs(1.0 - covratio) > ((3.0 * k)/(n - k))) + 0
         cookD = []
+        # self.plainTextEdit.insertPlainText("xv: %s\n" % xv)
+        # self.plainTextEdit.insertPlainText("ps: %s\n" % ps)
+
+        # with open('/home/sn/Asztal/localxw.txt', 'wb') as fp:
+        #     pickle.dump(xv, fp)
+        #
+        # with open('/home/sn/Asztal/localps.txt', 'wb') as fp:
+        #     pickle.dump(ps, fp)
+
         for e in CookD:
+            # self.plainTextEdit.insertPlainText("e: %s\n" % e)
             cookD.append(self.pf(xv, ps, e))
 
         CookDbin = (array(cookD) > 0.5) + 0
@@ -385,7 +487,13 @@ class Dialog(QDialog, Ui_Dialog):
 
     def pf(self, xv, ps, e):
         # ps[xv.index(min(xv, key=lambda x:abs(x-e)))]
-        return max(ps[xv <= e])
+        # return max(ps[xv <= e])
+        res = 0
+        v = ps[array(xv)<=e]
+        if len(v)!=0:
+            res = max(v)
+        # return max(ps[array(xv)<=e])
+        return res
 
 
     def pnorm(self, z):

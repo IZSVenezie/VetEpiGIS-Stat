@@ -66,7 +66,7 @@ class VetEpiGISstat:
             'i18n',
             'VetEpiGISstat_{}.qm'.format(locale))
 
-        self.vers = '0.13'
+        self.vers = '0.14'
         self.prevcur = self.iface.mapCanvas().cursor()
 
         # self.thePoint = QgsPoint(0,0)
@@ -163,6 +163,16 @@ class VetEpiGISstat:
         dlg.setWindowTitle("Local Moran's I (LISA)")
         dlg.toolButton.setIcon(QIcon(':/plugins/VetEpiGISstat/images/verify8.png'))
         dlg.toolButton.setToolTip('Run the analysis')
+
+        re2 = QRegExp('[0-9.]+')
+        val2 = QRegExpValidator(re2)
+        dlg.lineEdit.setValidator(val2)
+
+        if lyr.type() == 0:
+            if lyr.geometryType() == QGis.Polygon:
+                dlg.comboBox_5.addItem('touch')
+            if lyr.geometryType() == QGis.Point:
+                dlg.comboBox_5.addItem('within distance')
 
         dlg.exec_()
 
