@@ -33,8 +33,7 @@ from PyQt4.QtSql import *
 from qgis.core import QgsField, QgsSpatialIndex, QgsMessageLog, QgsProject, \
     QgsCoordinateTransform, QGis, QgsVectorFileWriter, QgsMapLayerRegistry, QgsFeature, \
     QgsGeometry, QgsFeatureRequest, QgsPoint, QgsVectorLayer, QgsCoordinateReferenceSystem, \
-    QgsRectangle, QgsDataSourceURI, QgsDataProvider, QgsVectorDataProvider, QgsDistanceArea, \
-    QgsUnitTypes
+    QgsRectangle, QgsDataSourceURI, QgsDataProvider, QgsVectorDataProvider, QgsDistanceArea
 from qgis.gui import QgsMapTool, QgsMapToolEmitPoint, QgsMessageBar, QgsRubberBand
 from numpy import *
 import itertools, math
@@ -145,7 +144,7 @@ class Dialog(QDialog, Ui_Dialog):
                             sor.append(featB.id())
                 lst.append(sor)
 
-        self.plainTextEdit.insertPlainText("%s\n" % lst)
+        # self.plainTextEdit.insertPlainText("%s\n" % lst)
         return lst
 
 
@@ -179,9 +178,11 @@ class Dialog(QDialog, Ui_Dialog):
             if self.comboBox_5.currentText()!='within distance':
                 nb = self.poly2nb()
             else:
+                if self.lineEdit.text() == '':
+                    QApplication.restoreOverrideCursor()
+                    QMessageBox.information(None, 'Missing data', 'Within distance must be set up!')
+                    return
                 nb = self.point2nb()
-                # QApplication.restoreOverrideCursor()
-                # return
             self.nb = nb
         else:
             nb = self.nb
@@ -269,7 +270,7 @@ class Dialog(QDialog, Ui_Dialog):
 
         listw = vlist
 
-        self.plainTextEdit.insertPlainText("listw: %s\n" % listw)
+        # self.plainTextEdit.insertPlainText("listw: %s\n" % listw)
         # return
 
         # S0 = sum(sum(filter(None, listw)))
