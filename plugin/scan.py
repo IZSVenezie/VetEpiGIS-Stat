@@ -42,7 +42,7 @@ from scan_dialog import Ui_Dialog
 
 
 class Dialog(QDialog, Ui_Dialog):         
-    def __init__(self):
+    def __init__(self, lyr):
         """Constructor for the dialog.
         
         """
@@ -50,6 +50,40 @@ class Dialog(QDialog, Ui_Dialog):
         QDialog.__init__(self)                               
                         
         self.setupUi(self)
+
+        self.lyr = lyr
+
+        self.toolButton.clicked.connect(self.Kulldorf)
+
+
+    def Kulldorf(self):
+        """https://cran.r-project.org/web/packages/SpatialEpi/SpatialEpi.pdf"""
+
+        QApplication.setOverrideCursor(Qt.WaitCursor)
+
+        toradians = math.atan(1.0)/45.0
+        radiusearth = 0.5 * (6378.2 + 6356.7)
+        sine51 = math.sin(51.5 * toradians)
+
+        population = []
+        case = []
+
+        feat = QgsFeature()
+        feats = self.lyr.getFeatures()
+        while feats.nextFeature(feat):
+            cp = feat.geometry().centroid()
+            x = (cp.geometry().x()*toradians)*radiusearth*sine51
+            y = (cp.geometry().y()*toradians)*radiusearth
+            population.append(float(feat['Lower_Saxo']))
+            case.append(float(feat['Lower_Sa_1']))
+            self.plainTextEdit.insertPlainText("%s %s\n" % (x, y))
+
+        self.plainTextEdit.insertPlainText("%s\n" % case)
+        self.plainTextEdit.insertPlainText("%s\n" % population)
+
+        expectedcases = array(population)*(sum(array(case))/sum(array(population)))
+
+        QApplication.restoreOverrideCursor()
 
 
     # def save(self):

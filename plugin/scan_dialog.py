@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'scan_dialog_base.ui'
 #
-# Created: Wed Jan  4 11:32:45 2017
+# Created: Thu Jan  5 14:40:25 2017
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,12 +26,20 @@ except AttributeError:
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName(_fromUtf8("Dialog"))
-        Dialog.resize(400, 300)
+        Dialog.resize(652, 508)
+        self.gridLayout = QtGui.QGridLayout(Dialog)
+        self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
+        self.plainTextEdit = QtGui.QPlainTextEdit(Dialog)
+        self.plainTextEdit.setObjectName(_fromUtf8("plainTextEdit"))
+        self.gridLayout.addWidget(self.plainTextEdit, 0, 0, 1, 1)
+        self.toolButton = QtGui.QToolButton(Dialog)
+        self.toolButton.setObjectName(_fromUtf8("toolButton"))
+        self.gridLayout.addWidget(self.toolButton, 0, 1, 1, 1)
         self.buttonBox = QtGui.QDialogButtonBox(Dialog)
-        self.buttonBox.setGeometry(QtCore.QRect(30, 240, 341, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
+        self.gridLayout.addWidget(self.buttonBox, 1, 0, 1, 2)
 
         self.retranslateUi(Dialog)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), Dialog.accept)
@@ -40,4 +48,5 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(_translate("Dialog", "Dialog", None))
+        self.toolButton.setText(_translate("Dialog", "...", None))
 

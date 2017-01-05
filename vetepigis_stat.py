@@ -114,12 +114,12 @@ class VetEpiGISstat:
         self.iface.addPluginToMenu('&VetEpiGIS-Stat', self.frmLT)
         self.frmLT.triggered.connect(self.lTests)
 
-        # self.frmSC = QAction(
-        #     QIcon(':/plugins/VetEpiGISstat/images/fingerprint-scan.png'),
-        #     QCoreApplication.translate('VetEpiGIS-Stat', "Scan statistic"),
-        #     self.iface.mainWindow())
-        # self.iface.addPluginToMenu('&VetEpiGIS-Stat', self.frmSC)
-        # self.frmSC.triggered.connect(self.scan)
+        self.frmSC = QAction(
+            QIcon(':/plugins/VetEpiGISstat/images/fingerprint-scan.png'),
+            QCoreApplication.translate('VetEpiGIS-Stat', "Scan statistic"),
+            self.iface.mainWindow())
+        self.iface.addPluginToMenu('&VetEpiGIS-Stat', self.frmSC)
+        self.frmSC.triggered.connect(self.scan)
 
         self.actAbout = QAction(
             QIcon(':/plugins/VetEpiGISstat/images/icon02.png'),
@@ -137,7 +137,7 @@ class VetEpiGISstat:
 
         self.toolbar.addAction(self.frmGT)
         self.toolbar.addAction(self.frmLT)
-        # self.toolbar.addAction(self.frmSC)
+        self.toolbar.addAction(self.frmSC)
 
 
 
@@ -148,11 +148,11 @@ class VetEpiGISstat:
 
 
     def scan(self):
-        # lyr = self.iface.activeLayer()
-        dlg = scan.Dialog()
+        lyr = self.iface.activeLayer()
+        dlg = scan.Dialog(lyr)
         dlg.setWindowTitle("Scan statistic")
-        # dlg.toolButton.setIcon(QIcon(':/plugins/VetEpiGISstat/images/verify8.png'))
-        # dlg.toolButton.setToolTip('Run the analysis')
+        dlg.toolButton.setIcon(QIcon(':/plugins/VetEpiGISstat/images/verify8.png'))
+        dlg.toolButton.setToolTip('Run the analysis')
 
         dlg.exec_()
 
