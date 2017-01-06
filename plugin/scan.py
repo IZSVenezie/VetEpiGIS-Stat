@@ -67,6 +67,8 @@ class Dialog(QDialog, Ui_Dialog):
 
         population = []
         case = []
+        xs = []
+        ys = []
 
         feat = QgsFeature()
         feats = self.lyr.getFeatures()
@@ -76,12 +78,23 @@ class Dialog(QDialog, Ui_Dialog):
             y = (cp.geometry().y()*toradians)*radiusearth
             population.append(float(feat['Lower_Saxo']))
             case.append(float(feat['Lower_Sa_1']))
-            self.plainTextEdit.insertPlainText("%s %s\n" % (x, y))
+            # self.plainTextEdit.insertPlainText("%s %s\n" % (x, y))
+            xs.append(x)
+            ys.append(y)
 
+        self.plainTextEdit.insertPlainText("%s\n" % xs)
+        self.plainTextEdit.insertPlainText("%s\n" % ys)
         self.plainTextEdit.insertPlainText("%s\n" % case)
         self.plainTextEdit.insertPlainText("%s\n" % population)
 
-        expectedcases = array(population)*(sum(array(case))/sum(array(population)))
+        expected_cases = array(population)*(sum(array(case))/sum(array(population)))
+
+        n = len(case)
+        total_pop = sum(population)
+        geo = column_stack((xs, ys))
+        dist = empty([n,n])
+        # np.linalg.norm(geo[0]-geo[1])
+        dist[rowid, colid] = linalg.norm(geo[rowid]-geo[colid])
 
         QApplication.restoreOverrideCursor()
 
