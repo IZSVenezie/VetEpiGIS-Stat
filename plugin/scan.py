@@ -65,6 +65,10 @@ class Dialog(QDialog, Ui_Dialog):
         radiusearth = 0.5 * (6378.2 + 6356.7)
         sine51 = math.sin(51.5 * toradians)
 
+        pop_upper_bound = 0.5
+        n_simulations = 999
+        alpha_level = 0.05
+
         population = []
         case = []
         xs = []
@@ -87,16 +91,36 @@ class Dialog(QDialog, Ui_Dialog):
         self.plainTextEdit.insertPlainText("%s\n" % case)
         self.plainTextEdit.insertPlainText("%s\n" % population)
 
-        expected_cases = array(population)*(sum(array(case))/sum(array(population)))
+        total_pop = sum(array(population))
+        expected_cases = array(population)*(sum(array(case))/total_pop)
 
         n = len(case)
-        total_pop = sum(population)
-        geo = column_stack((xs, ys))
-        dist = empty([n,n])
-        # np.linalg.norm(geo[0]-geo[1])
-        dist[rowid, colid] = linalg.norm(geo[rowid]-geo[colid])
+
+geo = column_stack((xs, ys))
+dist = empty([n, n])
+# np.linalg.norm(geo[0]-geo[1])
+# dist[rowid, colid] = linalg.norm(geo[rowid]-geo[colid])
+for rowid in xrange(n):
+    for colid in xrange(n):
+        dist[rowid, colid] = linalg.norm(geo[rowid] - geo[colid])
+
+nearest_neighbors = []
+n_zones = 0
+vector_cutoffs = [0]
+vek = []
+for i in xrange(n):
+    neighbors = dist[:,i].argsort()
+    neighbors = list(neighbors[(cumsum([population[i] for i in neighbors])/total_pop)<=pop_upper_bound])
+    nearest_neighbors.append(neighbors)
+    n_zones = n_zones + len(neighbors)
+    vector_cutoffs.append(n_zones)
+    vek.append( [i]*len(neighbors) )
+
+vek = sum(vek)
+
 
         QApplication.restoreOverrideCursor()
+
 
 
     # def save(self):
