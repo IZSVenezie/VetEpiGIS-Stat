@@ -66,7 +66,7 @@ class VetEpiGISstat:
             'i18n',
             'VetEpiGISstat_{}.qm'.format(locale))
 
-        self.vers = '0.14'
+        self.vers = '0.16'
         self.prevcur = self.iface.mapCanvas().cursor()
 
         # self.thePoint = QgsPoint(0,0)
@@ -140,7 +140,6 @@ class VetEpiGISstat:
         self.toolbar.addAction(self.frmSC)
 
 
-
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         self.iface.removePluginMenu('&VetEpiGIS-Stat', self.actAbout)
@@ -150,7 +149,7 @@ class VetEpiGISstat:
     def scan(self):
         lyr = self.iface.activeLayer()
         dlg = scan.Dialog(lyr)
-        dlg.setWindowTitle("Scan statistic")
+        dlg.setWindowTitle("Kulldorff scan statistic")
         dlg.toolButton.setIcon(QIcon(':/plugins/VetEpiGISstat/images/verify8.png'))
         dlg.toolButton.setToolTip('Run the analysis')
 
@@ -207,7 +206,7 @@ class VetEpiGISstat:
         dlg.textEdit.append('VetEpiGIS-Stat ' + self.vers + '\n')
         dlg.textEdit.setFontWeight(ow)
         dlg.textEdit.append(
-            "VetEpiGIS-Stat is a member of VetEpiGIS QGIS plugin family. The goal of the development is to collect spatial statistical methods are used in veterinary epidemiology into a plugin and create an easy to use interface for their application. Implemented methods: global Moran's I, global Geary's c, Local Moran's I.\nThe functions are based on the spdep R package: https://cran.r-project.org/web/packages/spdep\n")
+            "VetEpiGIS-Stat is a member of VetEpiGIS QGIS plugin family. The goal of the development is to collect spatial statistical methods are used in veterinary epidemiology into a plugin and create an easy to use interface for their application. Implemented methods: global Moran's I, global Geary's c, Local Moran's I, Kulldorff scan statistic. The functions based on R packages:\n - spdep: https://CRAN.R-project.org/package=spdep\n - SpatialEpi: https://CRAN.R-project.org/package=SpatialEpi\n")
         dlg.textEdit.setFontWeight(QFont.Bold)
         dlg.textEdit.append('Developers:')
         dlg.textEdit.setFontWeight(ow)
